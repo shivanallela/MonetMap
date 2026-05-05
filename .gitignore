@@ -1,0 +1,19 @@
+# C++ / Qt build artifacts
+/release/
+/debug/
+/CLI/*.exe
+*.exe
+*.o
+*.a
+*.dll
+*.obj
+Makefile*
+.qmake.stash
+object_script.*
+moc_*.cpp
+
+# CSV Data files
+*.csv
+
+# Vercel
+.vercel/
