@@ -470,13 +470,13 @@ async function getAISuggestion() {
     const now = new Date();
     const { inc, exp, sav } = getMonthlyTotals(now.getFullYear(), now.getMonth() + 1);
     
-    // Create prompt
-    const prompt = `I have a total income of Rs ${inc}, and total expenses of Rs ${exp}. My current savings are Rs ${sav}. Based on this, give me practical financial suggestions in a concise format (just 3-4 bullet points, use "Rs" for currency). Keep it very brief and actionable. Use emojis where appropriate.`;
+    // Create AI prompt
+    const aiPrompt = `I have a total income of Rs ${inc}, and total expenses of Rs ${exp}. My current savings are Rs ${sav}. Based on this, give me practical financial suggestions in a concise format (just 3-4 bullet points, use "Rs" for currency). Keep it very brief and actionable. Use emojis where appropriate.`;
 
     let apiKey = localStorage.getItem('mm_groq_key');
     if (!apiKey) {
-      apiKey = prompt('Please enter your Groq API Key to use the AI Advisor:');
-      if (apiKey) localStorage.setItem('mm_groq_key', apiKey);
+      apiKey = window.prompt('Please enter your Groq API Key to use the AI Advisor:');
+      if (apiKey) localStorage.setItem('mm_groq_key', apiKey.trim());
       else throw new Error('API Key required');
     }
 
@@ -488,7 +488,7 @@ async function getAISuggestion() {
       },
       body: JSON.stringify({
         model: 'llama-3.1-8b-instant',
-        messages: [{ role: 'user', content: prompt }]
+        messages: [{ role: 'user', content: aiPrompt }]
       })
     });
 
