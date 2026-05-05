@@ -458,6 +458,55 @@ function toast(msg, type='success') {
   toastTimer = setTimeout(() => el.classList.add('hidden'), 3000);
 }
 
+// ── AI Advisor ─────────────────────────────────────────────
+async function getAISuggestion() {
+  const btn = document.getElementById('btnAiAdvisor');
+  const textEl = document.getElementById('aiSuggestionText');
+  
+  btn.disabled = true;
+  btn.textContent = '⏳ Thinking...';
+  
+  try {
+    const now = new Date();
+    const { inc, exp, sav } = getMonthlyTotals(now.getFullYear(), now.getMonth() + 1);
+    
+    // Create prompt
+    const prompt = `I have a total income of Rs ${inc}, and total expenses of Rs ${exp}. My current savings are Rs ${sav}. Based on this, give me practical financial suggestions in a concise format (just 3-4 bullet points, use "Rs" for currency). Keep it very brief and actionable. Use emojis where appropriate.`;
+
+    let apiKey = localStorage.getItem('mm_groq_key');
+    if (!apiKey) {
+      apiKey = prompt('Please enter your Groq API Key to use the AI Advisor:');
+      if (apiKey) localStorage.setItem('mm_groq_key', apiKey);
+      else throw new Error('API Key required');
+    }
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'llama-3.1-8b-instant',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) throw new Error('API Error');
+    const data = await response.json();
+    const advice = data.choices[0].message.content;
+    
+    textEl.innerHTML = advice.replace(/\n/g, '<br>');
+    textEl.style.color = 'var(--text)';
+  } catch (err) {
+    textEl.textContent = '❌ Failed to get AI advice. Check your API key or connection.';
+    textEl.style.color = 'var(--red)';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✨ Get New Advice';
+  }
+}
+
 // ── Init ──────────────────────────────────────────────────
 (function init() {
   load();

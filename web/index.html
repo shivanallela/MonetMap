@@ -66,6 +66,11 @@
             <h3 class="card-title">Recent Transactions</h3>
             <div id="recentList" class="recent-list"></div>
           </div>
+          <div class="card ai-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(108,99,255,0.12), rgba(167,139,250,0.08)); border-color: rgba(108,99,255,0.25);">
+            <h3 class="card-title" style="color: var(--accent2);">🤖 AI Financial Advisor</h3>
+            <p id="aiSuggestionText" style="color:var(--text2);font-size:0.95rem;margin-bottom:12px;line-height:1.6;">Click below to get personalized financial advice based on your current balance and expenses.</p>
+            <button class="btn-primary" onclick="getAISuggestion()" id="btnAiAdvisor" style="width: auto;">✨ Get AI Advice</button>
+          </div>
         </div>
       </section>
 
